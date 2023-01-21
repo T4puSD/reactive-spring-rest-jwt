@@ -8,11 +8,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
+import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
@@ -67,6 +70,31 @@ class AuthServiceImplTest {
 
         StepVerifier.create(accountMono)
                 .expectNextCount(0)
+                .verifyComplete();
+    }
+
+    @Test
+    void verifyJWT_whenCalledWithValidJWT_shouldReturnAccount() {
+        UUID uuid = UUID.randomUUID();
+        Account account = new Account()
+                .setUid(uuid)
+                .setRoles(Set.of(Roles.ROLE_ADMIN, Roles.ROLE_USER));
+
+        Optional<JWTResponse> jwtResponse = authService.createJWT(account)
+                .blockOptional();
+
+        assertThat(jwtResponse)
+                .isNotEmpty()
+                .get()
+                .extracting("jwt")
+                .isNotNull();
+
+        Mockito.when(accountRepository.findById(uuid))
+                .thenReturn(Mono.just(account));
+        Mono<Account> accountMono = authService.verifyJWT(jwtResponse.get().jwt());
+
+        StepVerifier.create(accountMono)
+                .expectNextMatches(account1 -> account1.getUid().equals(uuid))
                 .verifyComplete();
     }
 }
