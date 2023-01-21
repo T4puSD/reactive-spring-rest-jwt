@@ -56,7 +56,7 @@ public class AuthServiceImpl implements AuthService {
         return Mono.justOrEmpty(account)
                 .map(account1 -> JWT.create()
                         .withIssuer(ISSUER)
-                        .withClaim(ROLES_KEY, account1.grantedAuthorities())
+                        .withClaim(ROLES_KEY, account1.getRoleNames())
                         .withSubject(account1.getUid().toString())
                         .sign(algorithm))
                 .map(JWTResponse::new)

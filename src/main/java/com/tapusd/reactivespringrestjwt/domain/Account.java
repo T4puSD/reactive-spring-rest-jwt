@@ -2,14 +2,11 @@ package com.tapusd.reactivespringrestjwt.domain;
 
 import com.tapusd.reactivespringrestjwt.domain.enums.Roles;
 import org.springframework.data.redis.core.RedisHash;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @RedisHash(value = "account")
 public class Account implements Serializable {
@@ -56,11 +53,10 @@ public class Account implements Serializable {
         return this;
     }
 
-    public List<GrantedAuthority> grantedAuthorities() {
+    public List<String> getRoleNames() {
         return getRoles().stream()
                 .map(Enum::name)
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
