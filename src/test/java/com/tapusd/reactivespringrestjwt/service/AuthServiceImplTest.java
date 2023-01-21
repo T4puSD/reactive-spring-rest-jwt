@@ -51,4 +51,22 @@ class AuthServiceImplTest {
                 .expectNextCount(0)
                 .verifyComplete();
     }
+
+    @Test
+    void verifyJWT_whenCalledWithNullJWT_shouldReturnEmptyMono() {
+        Mono<Account> accountMono = authService.verifyJWT(null);
+
+        StepVerifier.create(accountMono)
+                .expectNextCount(0)
+                .verifyComplete();
+    }
+
+    @Test
+    void verifyJWT_whenCalledWithInvalidJWT_shouldReturnEmptyMono() {
+        Mono<Account> accountMono = authService.verifyJWT("invalidjwtstring");
+
+        StepVerifier.create(accountMono)
+                .expectNextCount(0)
+                .verifyComplete();
+    }
 }
