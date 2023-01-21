@@ -53,6 +53,24 @@ public class Account implements Serializable {
         return this;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Account account = (Account) o;
+
+        if (getUid() != null ? !getUid().equals(account.getUid()) : account.getUid() != null) return false;
+        return getEmail() != null ? getEmail().equals(account.getEmail()) : account.getEmail() == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getUid() != null ? getUid().hashCode() : 0;
+        result = 31 * result + (getEmail() != null ? getEmail().hashCode() : 0);
+        return result;
+    }
+
     public List<String> getRoleNames() {
         return getRoles().stream()
                 .map(Enum::name)
