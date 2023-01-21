@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import reactor.core.publisher.Mono;
 
+import java.util.Date;
 import java.util.UUID;
 
 @Service
@@ -27,6 +28,7 @@ public class AuthServiceImpl implements AuthService {
     private static final Logger LOGGER = LoggerFactory.getLogger(AuthServiceImpl.class);
     private static final String ISSUER = "reactive-spring-rest-jwt";
     private static final String ROLES_KEY = "roles";
+    private static final long TOKEN_VALIDITY_IN_MILLISECONDS = 60 * 60000L; // 1 hour
 
     private final Algorithm algorithm;
     private final AccountRepository accountRepository;
@@ -58,6 +60,8 @@ public class AuthServiceImpl implements AuthService {
                         .withIssuer(ISSUER)
                         .withClaim(ROLES_KEY, account1.getRoleNames())
                         .withSubject(account1.getUid().toString())
+                        .withIssuedAt(new Date())
+                        .withExpiresAt(new Date(new Date().getTime() + TOKEN_VALIDITY_IN_MILLISECONDS))
                         .sign(algorithm))
                 .map(JWTResponse::new)
                 .onErrorResume(JWTCreationException.class::isInstance, throwable -> {
