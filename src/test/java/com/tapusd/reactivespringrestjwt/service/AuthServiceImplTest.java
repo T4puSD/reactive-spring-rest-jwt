@@ -97,4 +97,38 @@ class AuthServiceImplTest {
                 .expectNextMatches(account1 -> account1.getUid().equals(uuid))
                 .verifyComplete();
     }
+
+    @Test
+    void verifyJWT_whenCalledWithExpiredJWT_shouldReturnEmptyMono() {
+        String expiredJWT = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJyZWFjdGl2ZS1zcHJpbmctcmVzdC1qd3QiLCJpYXQiOjE2NzQzMDkyNjcsImV4cCI6MTY3NDMxMjg2NywiYXVkIjoiIiwic3ViIjoiZWU0ZmRmOTQtNzAxMi00ZjdlLThhNmEtZWNmOTkxM2M1MTY5IiwiUm9sZSI6WyJST0xFX1VTRVIiLCJST0xFX0FETUlOIl19.b_J5R9bNrmXeSPtpPdyj1poxVE1XwHtDKhOQQXrn1Vs";
+        Mono<Account> accountMono = authService.verifyJWT(expiredJWT);
+
+        StepVerifier.create(accountMono)
+                .expectNextCount(0)
+                .verifyComplete();
+    }
+
+    @Test
+    void verifyJWT_whenCalledWithUnknownSecretKeyGeneratedJWT_shouldReturnEmptyMono() {
+        UUID uuid = UUID.randomUUID();
+        Account account = new Account()
+                .setUid(uuid)
+                .setRoles(Set.of(Roles.ROLE_ADMIN, Roles.ROLE_USER));
+
+        AuthService invaliAuthService = new AuthServiceImpl("invalidHamcSecret", accountRepository, passwordEncoder);
+        Optional<JWTResponse> invaliJWTResponse = invaliAuthService.createJWT(account)
+                .blockOptional();
+
+
+        assertThat(invaliJWTResponse)
+                .isNotEmpty()
+                .get()
+                .extracting("jwt")
+                .isNotNull();
+
+        Mono<Account> accountMono = authService.verifyJWT(invaliJWTResponse.get().jwt());
+        StepVerifier.create(accountMono)
+                .expectNextCount(0)
+                .verifyComplete();
+    }
 }
