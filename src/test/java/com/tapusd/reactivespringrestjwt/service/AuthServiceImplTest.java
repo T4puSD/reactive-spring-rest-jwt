@@ -115,18 +115,18 @@ class AuthServiceImplTest {
                 .setUid(uuid)
                 .setRoles(Set.of(Roles.ROLE_ADMIN, Roles.ROLE_USER));
 
-        AuthService invaliAuthService = new AuthServiceImpl("invalidHamcSecret", accountRepository, passwordEncoder);
-        Optional<JWTResponse> invaliJWTResponse = invaliAuthService.createJWT(account)
+        AuthService invalidAuthService = new AuthServiceImpl("invalidHmacSecret", accountRepository, passwordEncoder);
+        Optional<JWTResponse> invalidJWTResponse = invalidAuthService.createJWT(account)
                 .blockOptional();
 
 
-        assertThat(invaliJWTResponse)
+        assertThat(invalidJWTResponse)
                 .isNotEmpty()
                 .get()
                 .extracting("jwt")
                 .isNotNull();
 
-        Mono<Account> accountMono = authService.verifyJWT(invaliJWTResponse.get().jwt());
+        Mono<Account> accountMono = authService.verifyJWT(invalidJWTResponse.get().jwt());
         StepVerifier.create(accountMono)
                 .expectNextCount(0)
                 .verifyComplete();
