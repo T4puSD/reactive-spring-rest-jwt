@@ -18,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -100,6 +101,8 @@ public class AuthServiceImpl implements AuthService {
                 .setPassword(passwordEncoder.encode(request.password()))
                 .setRoles(Collections.singleton(Roles.ROLE_USER));
 
-        return accountRepository.save(account);
+        return accountRepository.save(account)
+                .onErrorResume(DuplicateKeyException.class::isInstance,
+                        (Throwable throwable) -> Mono.error(new IllegalArgumentException("Email already taken")));
     }
 }
