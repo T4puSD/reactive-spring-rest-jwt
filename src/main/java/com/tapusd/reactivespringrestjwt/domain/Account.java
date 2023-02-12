@@ -91,7 +91,7 @@ public class Account implements Serializable {
 
     public List<SimpleGrantedAuthority> getGrantedAuthorities() {
         return getRoleNames().stream()
-                .map(role -> role.split("_")[0])
+                .map(role -> role.split("_")[1])
                 .map(SimpleGrantedAuthority::new)
                 .toList();
     }
