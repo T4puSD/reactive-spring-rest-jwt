@@ -25,7 +25,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public Mono<ResponseEntity<JWTResponse>> authenticate(@Valid AuthRequest authRequest) {
+    public Mono<ResponseEntity<JWTResponse>> authenticate(@RequestBody AuthRequest authRequest) {
         return authService.authenticate(authRequest)
                 .map(ResponseEntity::ok);
     }
