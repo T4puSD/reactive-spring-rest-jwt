@@ -1,4 +1,4 @@
-package com.tapusd.reactivespringrestjwt.controller.v1;
+package com.tapusd.reactivespringrestjwt.web.controller;
 
 
 import com.tapusd.reactivespringrestjwt.dto.response.ErrorResponse;
