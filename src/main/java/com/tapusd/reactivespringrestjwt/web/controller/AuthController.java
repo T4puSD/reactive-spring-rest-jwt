@@ -1,6 +1,6 @@
 package com.tapusd.reactivespringrestjwt.web.controller;
 
-import com.tapusd.reactivespringrestjwt.dto.AuthRequest;
+import com.tapusd.reactivespringrestjwt.dto.request.AuthRequest;
 import com.tapusd.reactivespringrestjwt.dto.response.JWTResponse;
 import com.tapusd.reactivespringrestjwt.service.AuthService;
 import jakarta.validation.Valid;
