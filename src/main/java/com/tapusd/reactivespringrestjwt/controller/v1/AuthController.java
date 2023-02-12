@@ -1,7 +1,7 @@
 package com.tapusd.reactivespringrestjwt.controller.v1;
 
 import com.tapusd.reactivespringrestjwt.dto.AuthRequest;
-import com.tapusd.reactivespringrestjwt.dto.JWTResponse;
+import com.tapusd.reactivespringrestjwt.dto.response.JWTResponse;
 import com.tapusd.reactivespringrestjwt.service.AuthService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

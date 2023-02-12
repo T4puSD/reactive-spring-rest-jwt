@@ -2,7 +2,7 @@ package com.tapusd.reactivespringrestjwt.service;
 
 import com.tapusd.reactivespringrestjwt.domain.Account;
 import com.tapusd.reactivespringrestjwt.domain.enums.Roles;
-import com.tapusd.reactivespringrestjwt.dto.JWTResponse;
+import com.tapusd.reactivespringrestjwt.dto.response.JWTResponse;
 import com.tapusd.reactivespringrestjwt.repository.AccountRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
