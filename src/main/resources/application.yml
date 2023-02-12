@@ -4,7 +4,7 @@ server:
 spring:
   data:
     mongodb:
-      uri: mongodb://localhost:27017/reactive_spring_rest_jwt
+      uri: mongodb://localhost:37017/reactive_spring_rest_jwt
 
 app:
   jwt:

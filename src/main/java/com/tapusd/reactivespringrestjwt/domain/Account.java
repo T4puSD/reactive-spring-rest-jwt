@@ -1,31 +1,39 @@
 package com.tapusd.reactivespringrestjwt.domain;
 
 import com.tapusd.reactivespringrestjwt.domain.enums.Roles;
+import jakarta.validation.constraints.NotEmpty;
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.MongoId;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 
 @Document
 public class Account implements Serializable {
 
     @Id
     @MongoId
-    private UUID uid;
+    private ObjectId uid;
+
+    @Indexed(unique = true)
     private String email;
+
+    @NotEmpty
     private String password;
 
+    @NotEmpty
     private Set<Roles> roles;
 
-    public UUID getUid() {
+    public ObjectId getUid() {
         return uid;
     }
 
-    public Account setUid(UUID uid) {
+    public Account setUid(ObjectId uid) {
         this.uid = uid;
         return this;
     }
