@@ -5,6 +5,7 @@ spring:
   data:
     mongodb:
       uri: mongodb://localhost:37017/reactive_spring_rest_jwt
+      auto-index-creation: true
 
 app:
   jwt:
