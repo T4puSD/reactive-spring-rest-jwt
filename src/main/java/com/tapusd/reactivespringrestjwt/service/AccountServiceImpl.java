@@ -6,6 +6,7 @@ import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Service
@@ -33,5 +34,10 @@ public class AccountServiceImpl implements com.tapusd.reactivespringrestjwt.serv
     @Override
     public Mono<Account> findByEmail(String email) {
         return accountRepository.findByEmail(email);
+    }
+
+    @Override
+    public Flux<Account> findAll() {
+        return accountRepository.findAll();
     }
 }
