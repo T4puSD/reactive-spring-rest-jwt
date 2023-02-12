@@ -7,7 +7,9 @@ import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.Payload;
 import com.tapusd.reactivespringrestjwt.domain.Account;
+import com.tapusd.reactivespringrestjwt.domain.enums.Roles;
 import com.tapusd.reactivespringrestjwt.dto.request.AuthRequest;
+import com.tapusd.reactivespringrestjwt.dto.request.RegistrationRequest;
 import com.tapusd.reactivespringrestjwt.dto.response.JWTResponse;
 import com.tapusd.reactivespringrestjwt.exception.NotFoundException;
 import com.tapusd.reactivespringrestjwt.repository.AccountRepository;
@@ -20,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import reactor.core.publisher.Mono;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.UUID;
 
@@ -88,5 +91,15 @@ public class AuthServiceImpl implements AuthService {
                     LOGGER.error("Invalid jwt token", throwable);
                     return Mono.empty();
                 });
+    }
+
+    @Override
+    public Mono<Account> registerUser(RegistrationRequest request) {
+        var account = new Account()
+                .setEmail(request.email())
+                .setPassword(passwordEncoder.encode(request.password()))
+                .setRoles(Collections.singleton(Roles.ROLE_USER));
+
+        return accountRepository.save(account);
     }
 }
