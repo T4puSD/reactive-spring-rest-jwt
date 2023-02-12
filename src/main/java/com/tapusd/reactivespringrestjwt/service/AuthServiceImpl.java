@@ -36,14 +36,14 @@ public class AuthServiceImpl implements AuthService {
     private static final long TOKEN_VALIDITY_IN_MILLISECONDS = 60 * 60000L; // 1 hour
 
     private final Algorithm algorithm;
-    private final AccountRepository accountRepository;
+    private final AccountService accountService;
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
     public AuthServiceImpl(@Value("${app.jwt.hmac.secret-key}") String hmacSecretKey,
-                           AccountRepository accountRepository,
+                           AccountService accountService,
                            PasswordEncoder passwordEncoder) {
-        this.accountRepository = accountRepository;
+        this.accountService = accountService;
         this.passwordEncoder = passwordEncoder;
         algorithm = Algorithm.HMAC256(hmacSecretKey);
     }
@@ -53,7 +53,7 @@ public class AuthServiceImpl implements AuthService {
         Assert.notNull(authRequest, "Auth request can not be null!");
         Assert.notNull(authRequest.email(), "Username can not be null!");
         Assert.notNull(authRequest.password(), "Password can not be null!");
-        return accountRepository.findByEmail(authRequest.email())
+        return accountService.findByEmail(authRequest.email())
                 .filter(account -> passwordEncoder.matches(authRequest.password(), account.getPassword()))
                 .flatMap(this::createJWT);
     }
@@ -86,7 +86,7 @@ public class AuthServiceImpl implements AuthService {
                 .flatMap(jwtToken -> Mono.justOrEmpty(verifier.verify(jwtToken))
                         .map(Payload::getSubject)
                         .map(ObjectId::new)
-                        .flatMap(accountRepository::findById))
+                        .flatMap(accountService::findById))
                 .switchIfEmpty(Mono.error(new NotFoundException("User not found")))
                 .onErrorResume(JWTVerificationException.class::isInstance, throwable -> {
                     LOGGER.error("Invalid jwt token", throwable);
@@ -101,8 +101,6 @@ public class AuthServiceImpl implements AuthService {
                 .setPassword(passwordEncoder.encode(request.password()))
                 .setRoles(Collections.singleton(Roles.ROLE_USER));
 
-        return accountRepository.save(account)
-                .onErrorResume(DuplicateKeyException.class::isInstance,
-                        (Throwable throwable) -> Mono.error(new IllegalArgumentException("Email already taken")));
+        return accountService.save(account);
     }
 }
