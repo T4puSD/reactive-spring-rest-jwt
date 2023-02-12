@@ -7,7 +7,7 @@ import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.Payload;
 import com.tapusd.reactivespringrestjwt.domain.Account;
-import com.tapusd.reactivespringrestjwt.dto.AuthRequest;
+import com.tapusd.reactivespringrestjwt.dto.request.AuthRequest;
 import com.tapusd.reactivespringrestjwt.dto.response.JWTResponse;
 import com.tapusd.reactivespringrestjwt.exception.NotFoundException;
 import com.tapusd.reactivespringrestjwt.repository.AccountRepository;

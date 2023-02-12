@@ -1,7 +1,7 @@
 package com.tapusd.reactivespringrestjwt.service;
 
 import com.tapusd.reactivespringrestjwt.domain.Account;
-import com.tapusd.reactivespringrestjwt.dto.AuthRequest;
+import com.tapusd.reactivespringrestjwt.dto.request.AuthRequest;
 import com.tapusd.reactivespringrestjwt.dto.response.JWTResponse;
 import reactor.core.publisher.Mono;
 
