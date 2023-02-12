@@ -9,6 +9,7 @@ import com.auth0.jwt.interfaces.Payload;
 import com.tapusd.reactivespringrestjwt.domain.Account;
 import com.tapusd.reactivespringrestjwt.dto.AuthRequest;
 import com.tapusd.reactivespringrestjwt.dto.response.JWTResponse;
+import com.tapusd.reactivespringrestjwt.exception.NotFoundException;
 import com.tapusd.reactivespringrestjwt.repository.AccountRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -82,6 +83,7 @@ public class AuthServiceImpl implements AuthService {
                         .map(Payload::getSubject)
                         .map(UUID::fromString)
                         .flatMap(accountRepository::findById))
+                .switchIfEmpty(Mono.error(new NotFoundException("User not found")))
                 .onErrorResume(JWTVerificationException.class::isInstance, throwable -> {
                     LOGGER.error("Invalid jwt token", throwable);
                     return Mono.empty();
