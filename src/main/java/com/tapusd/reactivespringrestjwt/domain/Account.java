@@ -1,16 +1,20 @@
 package com.tapusd.reactivespringrestjwt.domain;
 
 import com.tapusd.reactivespringrestjwt.domain.enums.Roles;
-import org.springframework.data.redis.core.RedisHash;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.MongoId;
 
 import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-@RedisHash(value = "account")
+@Document
 public class Account implements Serializable {
 
+    @Id
+    @MongoId
     private UUID uid;
     private String email;
     private String password;
