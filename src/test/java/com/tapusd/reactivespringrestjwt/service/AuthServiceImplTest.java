@@ -5,6 +5,7 @@ import com.tapusd.reactivespringrestjwt.domain.enums.Roles;
 import com.tapusd.reactivespringrestjwt.dto.response.JWTResponse;
 import com.tapusd.reactivespringrestjwt.exception.NotFoundException;
 import com.tapusd.reactivespringrestjwt.repository.AccountRepository;
+import org.bson.types.ObjectId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,7 +19,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Optional;
 import java.util.Set;
-import java.util.UUID;
 
 @ExtendWith(MockitoExtension.class)
 class AuthServiceImplTest {
@@ -37,7 +37,7 @@ class AuthServiceImplTest {
     @Test
     void createJWT_whenCalledWithValidAccount_shouldReturnMonoWithValue() {
         Account account = new Account()
-                .setUid(UUID.randomUUID())
+                .setUid(ObjectId.get())
                 .setRoles(Set.of(Roles.ROLE_ADMIN, Roles.ROLE_USER));
 
         Mono<JWTResponse> jwt = authService.createJWT(account);
@@ -76,7 +76,7 @@ class AuthServiceImplTest {
 
     @Test
     void verifyJWT_whenCalledWithValidJWT_shouldReturnAccount() {
-        UUID uuid = UUID.randomUUID();
+        ObjectId uuid = ObjectId.get();
         Account account = new Account()
                 .setUid(uuid)
                 .setRoles(Set.of(Roles.ROLE_ADMIN, Roles.ROLE_USER));
@@ -111,7 +111,7 @@ class AuthServiceImplTest {
 
     @Test
     void verifyJWT_whenCalledWithUnknownSecretKeyGeneratedJWT_shouldReturnEmptyMono() {
-        UUID uuid = UUID.randomUUID();
+        ObjectId uuid = ObjectId.get();
         Account account = new Account()
                 .setUid(uuid)
                 .setRoles(Set.of(Roles.ROLE_ADMIN, Roles.ROLE_USER));

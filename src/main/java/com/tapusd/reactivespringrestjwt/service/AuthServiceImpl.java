@@ -13,6 +13,7 @@ import com.tapusd.reactivespringrestjwt.dto.request.RegistrationRequest;
 import com.tapusd.reactivespringrestjwt.dto.response.JWTResponse;
 import com.tapusd.reactivespringrestjwt.exception.NotFoundException;
 import com.tapusd.reactivespringrestjwt.repository.AccountRepository;
+import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,6 @@ import reactor.core.publisher.Mono;
 
 import java.util.Collections;
 import java.util.Date;
-import java.util.UUID;
 
 @Service
 public class AuthServiceImpl implements AuthService {
@@ -84,7 +84,7 @@ public class AuthServiceImpl implements AuthService {
         return Mono.justOrEmpty(jwt)
                 .flatMap(jwtToken -> Mono.justOrEmpty(verifier.verify(jwtToken))
                         .map(Payload::getSubject)
-                        .map(UUID::fromString)
+                        .map(ObjectId::new)
                         .flatMap(accountRepository::findById))
                 .switchIfEmpty(Mono.error(new NotFoundException("User not found")))
                 .onErrorResume(JWTVerificationException.class::isInstance, throwable -> {
