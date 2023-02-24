@@ -41,7 +41,7 @@ public class SecurityConfig {
 
     @Bean
     public SecurityWebFilterChain securityFilterChain(ServerHttpSecurity http, AuthService authService) {
-        return http.csrf(ServerHttpSecurity.CsrfSpec::disable)
+        return http.csrf(ServerHttpSecurity.CsrfSpec::disable) // disabled for stateless server configuration
                 .httpBasic(httpBasicSpec ->
                         // to disable http basic login popup at browser end when the jwt is expired
                         httpBasicSpec.authenticationEntryPoint(new HttpStatusServerEntryPoint(HttpStatus.UNAUTHORIZED))
